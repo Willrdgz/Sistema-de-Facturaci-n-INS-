@@ -1,0 +1,1 @@
+@extends('layouts.app') @section('heading','Nuevo cliente') @section('content')<form class="card max-w-3xl" method="POST" action="{{ route('customers.store') }}">@csrf @include('customers.form')<div class="form-actions"><a class="btn-secondary" href="{{ route('customers.index') }}">Cancelar</a><button class="btn-primary">Guardar cliente</button></div></form>@endsection
