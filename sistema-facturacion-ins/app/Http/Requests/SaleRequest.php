@@ -22,6 +22,6 @@ class SaleRequest extends FormRequest
      */
     public function rules(): array
     {
-        return ['customer_id' => ['nullable', 'exists:customers,id'], 'payment_method' => ['required', 'in:cash,card,transfer'], 'discount' => ['nullable', 'numeric', 'min:0'], 'notes' => ['nullable', 'string', 'max:500'], 'items' => ['required', 'array', 'min:1'], 'items.*.product_id' => ['required', 'distinct', 'exists:products,id'], 'items.*.quantity' => ['required', 'integer', 'min:1']];
+        return ['customer_id' => ['nullable', 'exists:customers,id'], 'payment_method' => ['required', 'in:cash,card,transfer'], 'discount' => ['nullable', 'numeric', 'min:0', 'max:999999999'], 'notes' => ['nullable', 'string', 'max:500'], 'items' => ['required', 'array', 'min:1', 'max:100'], 'items.*.product_id' => ['required', 'distinct', 'exists:products,id'], 'items.*.quantity' => ['required', 'integer', 'min:1', 'max:1000000']];
     }
 }

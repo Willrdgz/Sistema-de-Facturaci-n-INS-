@@ -13,7 +13,12 @@ class Sale extends Model
     /** @use HasFactory<SaleFactory> */
     use HasFactory;
 
-    protected $fillable = ['customer_id', 'invoice_number', 'sold_at', 'payment_method', 'subtotal', 'discount', 'tax', 'total', 'notes'];
+    protected $fillable = ['customer_id', 'user_id', 'invoice_number', 'sold_at', 'payment_method', 'subtotal', 'discount', 'tax', 'total', 'notes', 'status', 'cancellation_reason', 'tax_rate', 'business_snapshot', 'customer_snapshot'];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function customer(): BelongsTo
     {
@@ -27,6 +32,6 @@ class Sale extends Model
 
     protected function casts(): array
     {
-        return ['sold_at' => 'datetime', 'subtotal' => 'decimal:2', 'discount' => 'decimal:2', 'tax' => 'decimal:2', 'total' => 'decimal:2'];
+        return ['sold_at' => 'datetime', 'subtotal' => 'decimal:2', 'discount' => 'decimal:2', 'tax' => 'decimal:2', 'total' => 'decimal:2', 'business_snapshot' => 'array', 'customer_snapshot' => 'array'];
     }
 }

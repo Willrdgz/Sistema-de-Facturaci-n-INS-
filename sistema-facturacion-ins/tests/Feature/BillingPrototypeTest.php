@@ -4,9 +4,13 @@ use App\Models\Business;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Sale;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
+beforeEach(function () {
+    $this->actingAs(User::factory()->create());
+});
 
 test('a sale creates an invoice and reduces product stock', function () {
     Business::create(['name' => 'Negocio de prueba', 'tax_rate' => 13]);

@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProductRequest;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\StockMovement;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -24,7 +26,10 @@ class ProductController extends Controller
 
     public function store(ProductRequest $request): RedirectResponse
     {
-        Product::create($request->validated() + ['active' => $request->boolean('active')]);
+        DB::transaction(function () use ($request) {
+            $product = Product::create($request->validated() + ['active' => $request->boolean('active')]);
+            StockMovement::create(['product_id' => $product->id, 'user_id' => $request->user()->id, 'type' => 'opening', 'quantity' => $product->stock, 'balance' => $product->stock, 'reason' => 'Existencia inicial']);
+        });
 
         return to_route('products.index')->with('success', 'Producto registrado correctamente.');
     }
@@ -36,7 +41,12 @@ class ProductController extends Controller
 
     public function update(ProductRequest $request, Product $product): RedirectResponse
     {
-        $product->update($request->validated() + ['active' => $request->boolean('active')]);
+        DB::transaction(function () use ($request, $product) {
+            $locked = Product::lockForUpdate()->findOrFail($product->id);
+            $data = $request->validated();
+            unset($data['stock']);
+            $locked->update($data + ['active' => $request->boolean('active')]);
+        });
 
         return to_route('products.index')->with('success', 'Producto actualizado correctamente.');
     }

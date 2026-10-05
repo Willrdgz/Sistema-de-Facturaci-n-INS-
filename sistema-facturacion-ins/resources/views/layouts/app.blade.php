@@ -7,15 +7,17 @@
 </head>
 <body class="bg-slate-100 text-slate-800">
 <div class="min-h-screen lg:flex">
-    <aside class="bg-slate-950 text-white lg:w-64 p-5">
-        <a href="{{ route('dashboard') }}" class="flex items-center gap-3 mb-8"><span class="grid h-11 w-11 place-items-center rounded-xl bg-emerald-500 font-black">INS</span><span><strong class="block">INS Facturación</strong><small class="text-slate-400">El Progreso</small></span></a>
+    <aside class="bg-slate-950 text-white lg:w-64 lg:shrink-0 p-5">
+        <a href="{{ route('dashboard') }}" class="flex items-center gap-3 mb-8"><span class="grid h-11 w-11 place-items-center rounded-xl bg-emerald-500 font-black">INS</span><span><strong class="block">INS Facturación</strong><small class="text-slate-400">{{ \App\Models\Business::value('trade_name') ?? \App\Models\Business::value('name') ?? 'Mi negocio' }}</small></span></a>
         <nav class="grid grid-cols-2 gap-2 lg:grid-cols-1">
-            @foreach([['dashboard','Panel','⌂'],['sales.index','Ventas','▤'],['customers.index','Clientes','♙'],['products.index','Productos','□'],['categories.index','Categorías','◇']] as [$route,$label,$icon])
+            @foreach([['dashboard','Panel','⌂'],['sales.index','Ventas','▤'],['customers.index','Clientes','♙'],['products.index','Productos','□'],['inventory.index','Inventario','↕'],['categories.index','Categorías','◇'],['reports.index','Reportes','▥'],['users.index','Usuarios','♙'],['business.edit','Configuración','⚙']] as [$route,$label,$icon])
+                @if(!in_array($route,['categories.index','reports.index','users.index','business.edit']) || auth()->user()->role==='admin')
                 <a href="{{ route($route) }}" class="nav-link {{ request()->routeIs(str_replace('.index','.*',$route)) ? 'nav-active' : '' }}"><span>{{ $icon }}</span>{{ $label }}</a>
+                @endif
             @endforeach
-        </nav>
+        </nav><div class="mt-8 text-sm text-slate-300"><p>{{ auth()->user()->name }}</p><small>{{ auth()->user()->role==='admin'?'Administrador':'Vendedor' }}</small><form method="POST" action="{{ route('logout') }}" class="mt-3">@csrf<button class="btn-secondary text-slate-800">Cerrar sesión</button></form></div>
     </aside>
-    <main class="flex-1">
+    <main class="flex-1 min-w-0">
         <header class="flex items-center justify-between border-b bg-white px-5 py-4 lg:px-8"><div><p class="text-xs font-semibold uppercase tracking-widest text-emerald-600">Sistema de gestión</p><h1 class="text-xl font-bold">@yield('heading', 'Panel principal')</h1></div><a href="{{ route('sales.create') }}" class="btn-primary">+ Nueva venta</a></header>
         <div class="p-5 lg:p-8">
             @if(session('success'))<div class="alert-success">{{ session('success') }}</div>@endif
