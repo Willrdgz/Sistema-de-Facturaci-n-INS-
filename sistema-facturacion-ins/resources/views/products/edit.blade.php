@@ -1,1 +1,17 @@
-@extends('layouts.app') @section('heading','Editar producto') @section('content')<form class="card max-w-3xl" method="POST" action="{{ route('products.update',$product) }}">@csrf @method('PUT') @include('products.form')<div class="form-actions"><a class="btn-secondary" href="{{ route('products.index') }}">Cancelar</a><button class="btn-primary">Guardar cambios</button></div></form>@endsection
+@extends('layouts.app')
+@section('heading','Editar producto')
+@section('content')
+    <form class="card max-w-3xl" method="POST" action="{{ route('products.update',$product) }}">
+        @csrf
+        @method('PUT')
+        @include('products.form')
+        <div class="form-actions">
+            <a class="btn-secondary" href="{{ route('products.index') }}">
+                Cancelar
+            </a>
+            <button class="btn-primary">
+                Guardar cambios
+            </button>
+        </div>
+    </form>
+@endsection

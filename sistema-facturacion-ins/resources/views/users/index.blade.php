@@ -1,2 +1,58 @@
-@extends('layouts.app') @section('heading','Usuarios y permisos') @section('content')
-<div class="toolbar"><p>Administra el acceso de tu equipo.</p><a class="btn-primary" href="{{ route('users.create') }}">+ Nuevo usuario</a></div><div class="card table-wrap"><table><thead><tr><th>Nombre</th><th>Correo</th><th>Perfil</th><th>Estado</th><th></th></tr></thead><tbody>@foreach($users as $account)<tr><td>{{ $account->name }}</td><td>{{ $account->email }}</td><td>{{ $account->role==='admin'?'Administrador':'Vendedor' }}</td><td>{{ $account->active?'Activo':'Inactivo' }}</td><td><a class="link" href="{{ route('users.edit',$account) }}">Editar</a></td></tr>@endforeach</tbody></table></div>{{ $users->links() }} @endsection
+@extends('layouts.app')
+@section('heading','Usuarios y permisos')
+@section('content')
+    <div class="toolbar">
+        <p>
+            Administra el acceso de tu equipo.
+        </p>
+        <a class="btn-primary" href="{{ route('users.create') }}">
+            + Nuevo usuario
+        </a>
+    </div>
+    <div class="card table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>
+                        Nombre
+                    </th>
+                    <th>
+                        Correo
+                    </th>
+                    <th>
+                        Perfil
+                    </th>
+                    <th>
+                        Estado
+                    </th>
+                    <th>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($users as $account)
+                    <tr>
+                        <td>
+                            {{ $account->name }}
+                        </td>
+                        <td>
+                            {{ $account->email }}
+                        </td>
+                        <td>
+                            {{ $account->role==='admin'?'Administrador':'Vendedor' }}
+                        </td>
+                        <td>
+                            {{ $account->active?'Activo':'Inactivo' }}
+                        </td>
+                        <td>
+                            <a class="link" href="{{ route('users.edit',$account) }}">
+                                Editar
+                            </a>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+    {{ $users->links() }}
+@endsection

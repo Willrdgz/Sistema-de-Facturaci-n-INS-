@@ -28,7 +28,46 @@
     .summary-row { @apply flex justify-between py-2 text-sm; }
 }
 
-@media print { body > div > aside, main > header, .print\:hidden { display:none!important; } main { width:100%; } body { background:white; } }
+.app-layout { background-color: var(--layout-background); color: var(--layout-background-text); }
+.layout-sidebar { background-color: var(--layout-sidebar); color: var(--layout-sidebar-text); }
+@media screen and (min-width: 1024px) {
+    .layout-sidebar {
+        position: sticky;
+        top: 0;
+        align-self: flex-start;
+        height: 100vh;
+        height: 100dvh;
+        overflow-y: auto;
+        overscroll-behavior-y: contain;
+        scrollbar-width: thin;
+        scrollbar-color: var(--layout-sidebar-text) var(--layout-sidebar);
+    }
+}
+.layout-sidebar .nav-link, .layout-sidebar small, .layout-sidebar .text-slate-300 { color: var(--layout-sidebar-text); }
+.layout-sidebar .nav-link:hover { background-color: var(--layout-sidebar-text); color: var(--layout-sidebar); }
+.layout-logo { filter: brightness(0) invert(var(--logo-invert)); }
+.layout-header { background-color: var(--layout-header); color: var(--layout-header-text); }
+.layout-header p { color: inherit; }
+.app-layout .card { color: #1e293b; }
+.app-layout .btn-primary, .app-layout .nav-active, .app-layout .nav-active:hover {
+    background-color: var(--layout-primary); color: var(--layout-primary-text);
+}
+.app-layout .btn-primary:hover { filter: brightness(0.9); }
+.app-layout .input:focus { border-color: var(--layout-primary); }
+.sidebar-account {
+    color: var(--layout-sidebar-text);
+    background-color: color-mix(in srgb, var(--layout-sidebar-text) 6%, var(--layout-sidebar));
+    border: 1px solid color-mix(in srgb, var(--layout-sidebar-text) 15%, transparent);
+}
+.sidebar-avatar { background-color: var(--layout-primary); color: var(--layout-primary-text); }
+.sidebar-role { background-color: color-mix(in srgb, var(--layout-sidebar-text) 12%, transparent); }
+.sidebar-logout { border: 1px solid color-mix(in srgb, var(--layout-sidebar-text) 25%, transparent); }
+.sidebar-logout:hover { background-color: color-mix(in srgb, var(--layout-sidebar-text) 12%, transparent); }
+.sidebar-logout:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+.report-chart { display: block; width: 100%; min-width: 600px; height: auto; }
+.report-chart rect:hover, .report-chart rect:focus { opacity: 0.75; stroke: #334155; stroke-width: 2; }
+
+@media print { body > div > aside, main > header, .print\:hidden { display:none!important; } main { width:100%; } body { background:white!important; color:#1e293b!important; } }
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';

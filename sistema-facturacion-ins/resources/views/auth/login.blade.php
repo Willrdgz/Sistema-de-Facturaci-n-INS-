@@ -1,1 +1,45 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Ingresar | INS Facturación</title>@vite(['resources/css/app.css','resources/js/app.js'])</head><body class="min-h-screen bg-slate-950 flex items-center justify-center p-6"><main class="card w-full max-w-md"><span class="inline-block bg-emerald-600 text-white rounded-xl p-3 font-black">INS</span><h1 class="text-2xl font-bold mt-5">Bienvenido a INS Facturación</h1><p class="text-slate-500 my-3">Ingresa para administrar las operaciones de tu negocio.</p>@if($errors->any())<div class="alert-error">{{ $errors->first() }}</div>@endif<form method="POST" action="{{ route('login.store') }}" class="space-y-4">@csrf<label class="block">Correo<input type="email" name="email" class="input" required autofocus autocomplete="username" value="{{ old('email') }}"></label><label class="block">Contraseña<input type="password" name="password" class="input" required autocomplete="current-password"></label><label class="flex gap-2"><input type="checkbox" name="remember" value="1">Recordarme</label><button class="btn-primary w-full">Iniciar sesión</button></form></main></body></html>
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>
+            Ingresar | InVenta
+        </title>
+        @vite(['resources/css/app.css','resources/js/app.js'])
+    </head>
+    <body class="min-h-screen bg-slate-950 flex items-center justify-center p-6">
+        <main class="card w-full max-w-md">
+            <img src="{{ asset('images/inventa-logo.png') }}" alt="InVenta" class="block mx-auto w-64 max-w-full h-auto" fetchpriority="high">
+            <h1 class="text-2xl font-bold mt-5 justify-center flex items-center gap-2">
+                Bienvenido a InVenta
+            </h1>
+            <p class="text-slate-500 my-3">
+                Ingresa para administrar las operaciones de tu negocio.
+            </p>
+            @if($errors->any())
+                <div class="alert-error">
+                    {{ $errors->first() }}
+                </div>
+            @endif
+            <form method="POST" action="{{ route('login.store') }}" class="space-y-4">
+                @csrf
+                <label class="block">
+                    Correo
+                    <input type="email" name="email" class="input" required autofocus autocomplete="username" value="{{ old('email') }}">
+                </label>
+                <label class="block">
+                    Contraseña
+                    <input type="password" name="password" class="input" required autocomplete="current-password">
+                </label>
+                <label class="flex gap-2">
+                    <input type="checkbox" name="remember" value="1">
+                    Recordarme
+                </label>
+                <button class="btn-primary w-full">
+                    Iniciar sesión
+                </button>
+            </form>
+        </main>
+    </body>
+</html>

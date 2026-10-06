@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Sale;
+use Carbon\CarbonImmutable;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -30,7 +31,34 @@ class ReportController extends Controller
         }
 
         $revenue = (clone $query)->where('status', 'completed')->sum('total');
+        $start = CarbonImmutable::parse($from)->startOfDay();
+        $end = CarbonImmutable::parse($to)->startOfDay();
+        $days = max(1, (int) $start->diffInDays($end) + 1);
+        $bucketDays = (int) ceil($days / 31);
+        $chart = [];
+        for ($offset = 0; $offset < $days; $offset += $bucketDays) {
+            $bucketStart = $start->addDays($offset);
+            $bucketEnd = $bucketStart->addDays($bucketDays - 1)->min($end);
+            $chart[] = [
+                'label' => $bucketStart->format('d/m'),
+                'period' => $bucketStart->format('d/m/Y').($bucketDays > 1 ? ' — '.$bucketEnd->format('d/m/Y') : ''),
+                'total' => 0,
+                'count' => 0,
+            ];
+        }
+        $dailySales = (clone $query)->reorder()->where('status', 'completed')
+            ->selectRaw('DATE(sold_at) as day, SUM(total) as amount, COUNT(*) as operations')
+            ->groupByRaw('DATE(sold_at)')->get();
+        foreach ($dailySales as $day) {
+            $index = (int) floor($start->diffInDays(CarbonImmutable::parse($day->day)) / $bucketDays);
+            $chart[$index]['total'] += (int) round((float) $day->amount * 100);
+            $chart[$index]['count'] += (int) $day->operations;
+        }
+        foreach ($chart as &$bucket) {
+            $bucket['total'] /= 100;
+        }
+        unset($bucket);
 
-        return view('reports.index', ['sales' => $query->paginate(20)->withQueryString(), 'revenue' => $revenue, 'from' => $from, 'to' => $to, 'stockValue' => Product::where('active', true)->selectRaw('SUM(stock * cost) as value')->value('value') ?? 0]);
+        return view('reports.index', ['sales' => $query->paginate(20)->withQueryString(), 'revenue' => $revenue, 'from' => $from, 'to' => $to, 'chart' => $chart, 'bucketDays' => $bucketDays, 'stockValue' => Product::where('active', true)->selectRaw('SUM(stock * cost) as value')->value('value') ?? 0]);
     }
 }
